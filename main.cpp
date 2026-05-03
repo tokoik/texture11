@@ -1,6 +1,7 @@
 ﻿#if defined(__APPLE__)
 #  define GL_SILENCE_DEPRECATION
 #  include <GLUT/glut.h>
+#  include <OpenGL/glext.h>
 #else
 #  if defined(_WIN32)
 //#    pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
@@ -8,6 +9,7 @@
 #    define _CRT_SECURE_NO_WARNINGS
 #  endif
 #  include <GL/glut.h>
+#  include <GL/glext.h>
 #endif
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,7 +54,7 @@ static void init(void)
 
   /* テクスチャの割り当て */
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, TEXWIDTH, TEXHEIGHT, 0,
-    GL_RGBA, GL_UNSIGNED_BYTE, texture);
+    GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
   for (int i = 0; i < 6; ++i) {
     /* テクスチャファイル名 */
@@ -76,21 +78,21 @@ static void init(void)
         GL_RGBA, GL_UNSIGNED_BYTE, texture);
     }
   }
-  
+
   /* テクスチャを拡大・縮小する方法の指定 */
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
   /* テクスチャの繰り返し方法の指定 */
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
   /* テクスチャ環境 */
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 
 #if 0
   /* 混合する色の設定 */
-  static const GLfloat blend[] = { 0.0, 1.0, 0.0, 1.0 };
+  static const GLfloat blend[] = { 0.0f, 1.0f, 0.0f, 1.0f };
   glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, blend);
 #endif
 
@@ -116,7 +118,7 @@ static void init(void)
 */
 static void scene(void)
 {
-  static const GLfloat color[] = { 1.0, 1.0, 1.0, 1.0 };  /* 材質 (色) */
+  static const GLfloat color[] = { 1.0f, 1.0f, 1.0f, 1.0f };   /* 材質 (色) */
 
   /* 材質の設定 */
   glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
@@ -149,6 +151,7 @@ static void display(void)
 
   /* 視点の移動（物体の方を奥に移動）*/
   glTranslated(0.0, 0.0, -5.0);
+  //gluLookAt(1.5, 2.0, 2.5, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
   /* トラックボール処理で図形を回転 */
   glMultMatrixd(trackballRotation());
@@ -176,7 +179,7 @@ static void resize(int w, int h)
 
   /* 透視変換行列の初期化 */
   glLoadIdentity();
-  gluPerspective(60.0, (double)w / (double)h, 1.0, 100.0);
+  gluPerspective(60.0, (double)w / (double)h, 0.1, 10.0);
 }
 
 static void idle(void)
