@@ -99,13 +99,13 @@ cd build
 
 ## 4. 解説
 
-プログラムのソースコード（主に `main.cpp` と `box.cpp`）をもとに、このプログラム内で行われている処理手順を解説します。このプログラムは、6枚の異なる画像ファイル（`.raw`）を読み込み、[`glTexSubImage2D()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexSubImage2D.xhtml) 関数を用いて1つの大きなテクスチャ領域の一部にそれぞれ転送（部分的な置き換え）を行う方法を示しています。また、その横長に配置されたテクスチャを立方体の各面に適切に切り分けてマッピングする実装となっています。
+プログラムのソースコード（主に main.cpp と box.cpp）をもとに、このプログラム内で行われている処理手順を解説します。このプログラムは、6枚の異なる画像ファイル（`.raw`）を読み込み、[`glTexSubImage2D()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexSubImage2D.xhtml) 関数を用いて1つの大きなテクスチャ領域の一部にそれぞれ転送（部分的な置き換え）を行う方法を示しています。また、その横長に配置されたテクスチャを立方体の各面に適切に切り分けてマッピングする実装となっています。
 
 ### 4.1 テクスチャのメモリ確保と置き換え (main.cpp 内の init 関数)
 
 1. **テクスチャ領域の確保:**
 
-    `glPixelStorei(GL_UNPACK_ALIGNMENT, 4)` を実行し、メモリ上のアライメントを指定した後、まずは `glTexImage2D()` を呼び出して、横1024ピクセル、縦128ピクセル分の「空の」2Dテクスチャ領域を OpenGL 側に確保します。（今回はあらかじめ1つの画像を読み込む処理は `#if 0` で無効化されています）
+    `glPixelStorei(` `GL_UNPACK_ALIGNMENT`, 4 `)` を実行し、メモリ上のアライメントを指定した後、まずは `glTexImage2D()` を呼び出して、横1024ピクセル、縦128ピクセル分の「空の」2Dテクスチャ領域を OpenGL 側に確保します。（今回はあらかじめ1つの画像を読み込む処理は `#if 0` で無効化されています）
 
 2. **画像の読み込みと部分的な置き換え:**
 
@@ -116,9 +116,9 @@ cd build
 
     [`glTexParameteri()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml) 等を使用し、テクスチャを拡大縮小して貼り付ける際の補間方法（`GL_LINEAR` = バイリニア補間）を設定しています。また、テクスチャ座標が範囲外になった際の処理として `GL_CLAMP` が指定されています。
 
-### 4.2 テクスチャ座標の割り当て (box.cpp 内の box() 関数)
+### 4.2 テクスチャ座標の割り当て (box.cpp 内の `box()` 関数)
 
-実際に直方体（立方体）を描画している部分です。[`glBegin(GL_QUADS)`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glBegin.xml) から [`glEnd()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glEnd.xml) の間で、6つの面を描画しています。頂点座標の指定直前に、[`glTexCoord2dv()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glTexCoord.xml) を使ってテクスチャ座標を指定しています。
+実際に直方体（立方体）を描画している部分です。[`glBegin(` `GL_QUADS` `)`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glBegin.xml) から [`glEnd()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glEnd.xml) の間で、6つの面を描画しています。頂点座標の指定直前に、[`glTexCoord2dv()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glTexCoord.xml) を使ってテクスチャ座標を指定しています。
 
 前段の処理で、横幅1024ピクセルのテクスチャ領域に128ピクセル幅の画像が6枚並んで配置されました。そのため、画像1枚分の幅はテクスチャ全体に対して `128 / 1024 = 0.125` の割合になります。
 
