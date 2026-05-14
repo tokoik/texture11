@@ -8,7 +8,7 @@
 
 このプログラムは上記の記事に従って作業を進めたときに作成されるものの例です。
 
-![立方体の６面に異なるテクスチャをマッピング](https://tokoik.github.io/blog/assets/images/dice5.jpg)
+![立方体の６面に異なるテクスチャをマッピング](https://tokoik.github.io/blog/assets/images/texture11.webp)
 
 ## 2. ビルド方法
 
@@ -99,7 +99,7 @@ cd build
 
 ## 4. 解説
 
-プログラムのソースコード（主に main.cpp と box.cpp）をもとに、このプログラム内で行われている処理手順を解説します。このプログラムは、6枚の異なる画像ファイル（`.raw`）を読み込み、[`glTexSubImage2D()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexSubImage2D.xhtml) 関数を用いて1つの大きなテクスチャ領域の一部にそれぞれ転送（部分的な置き換え）を行う方法を示しています。また、その横長に配置されたテクスチャを立方体の各面に適切に切り分けてマッピングする実装となっています。
+プログラムのソースコード（主に main.cpp と box.cpp）をもとに、このプログラム内で行われている処理手順を解説します。このプログラムは、６枚の異なる画像ファイル（`.raw`）を読み込み、[`glTexSubImage2D()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexSubImage2D.xhtml) 関数を用いて1つの大きなテクスチャ領域の一部にそれぞれ転送（部分的な置き換え）を行う方法を示しています。また、その横長に配置されたテクスチャを立方体の各面に適切に切り分けてマッピングする実装となっています。
 
 ### 4.1 テクスチャのメモリ確保と置き換え (main.cpp 内の init 関数)
 
@@ -110,7 +110,7 @@ cd build
 2. **画像の読み込みと部分的な置き換え:**
 
     ループ処理を用いて、6つの異なる画像ファイル (`room2ny.raw`, `room2nz.raw` など) を順番に読み込みます。各画像は 128×128 ピクセルの RGBA 形式です。
-    読み込んだ各画像のデータは、[`glTexSubImage2D()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexSubImage2D.xhtml) 関数を用いて、先に確保した横長のテクスチャ領域の特定の位置に転送されます。X方向のオフセット（転送先の開始位置）を `i * 128` と指定することで、6枚の画像がテクスチャ内で横一列に並ぶように部分的な置き換えを行っています。
+    読み込んだ各画像のデータは、[`glTexSubImage2D()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexSubImage2D.xhtml) 関数を用いて、先に確保した横長のテクスチャ領域の特定の位置に転送されます。X方向のオフセット（転送先の開始位置）を `i * 128` と指定することで、６枚の画像がテクスチャ内で横一列に並ぶように部分的な置き換えを行っています。
 
 3. **各種パラメータの設定:**
 
@@ -120,7 +120,7 @@ cd build
 
 実際に直方体（立方体）を描画している部分です。[`glBegin(` `GL_QUADS` `)`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glBegin.xml) から [`glEnd()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glEnd.xml) の間で、6つの面を描画しています。頂点座標の指定直前に、[`glTexCoord2dv()`](https://registry.khronos.org/OpenGL-Refpages/gl2.1/xhtml/glTexCoord.xml) を使ってテクスチャ座標を指定しています。
 
-前段の処理で、横幅1024ピクセルのテクスチャ領域に128ピクセル幅の画像が6枚並んで配置されました。そのため、画像1枚分の幅はテクスチャ全体に対して `128 / 1024 = 0.125` の割合になります。
+前段の処理で、横幅1024ピクセルのテクスチャ領域に128ピクセル幅の画像が６枚並んで配置されました。そのため、画像１枚分の幅はテクスチャ全体に対して `128 / 1024 = 0.125` の割合になります。
 
 ```c
   /* 頂点のテクスチャ座標 */
