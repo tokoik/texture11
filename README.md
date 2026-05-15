@@ -17,51 +17,44 @@
 ### 2.1 Windows (Visual Studio 2022 の場合)
 
 1. コマンドプロンプトまたは PowerShell を開き、このプロジェクトのディレクトリに移動します。
-
 2. 以下のコマンドを実行してビルドディレクトリを作成し、CMake で構成を行います。
 
-```bat
-mkdir build
-cd build
-cmake .. -G "Visual Studio 17 2022"
-```
+   ```bat
+   mkdir build
+   cd build
+   cmake .. -G "Visual Studio 17 2022"
+   ```
 
 3. 生成された build フォルダ内の texture11.sln を Visual Studio で開きます。
-
 4. ソリューションエクスプローラーで texture11 プロジェクトを右クリックし、「スタートアップ プロジェクトに設定」を選択します。
-
 5. 「ローカル Windows デバッガー」をクリックするか、F5 キーを押してビルドおよび実行します。
 
 ### 2.2 macOS (Xcode の場合)
 
 1. ターミナルを開き、このプロジェクトのディレクトリに移動します。
-
 2. 以下のコマンドを実行してビルドディレクトリを作成し、Xcode 用のプロジェクトを生成します。
 
-```sh
-mkdir build
-cd build
-cmake .. -G Xcode
-```
+   ```sh
+   mkdir build
+   cd build
+   cmake .. -G Xcode
+   ```
 
 3. 生成された build/texture11.xcodeproj を Xcode で開きます。
-
 4. 左上のスキーム選択（再生ボタンの横）が texture11 になっていることを確認します。
-
 5. 「Run」ボタン（再生ボタン）をクリックするか、Command + R を押してビルドおよび実行します。
 
 ### 2.3 Ubuntu Linux
 
 1. ターミナルを開き、このプロジェクトのディレクトリに移動します。
-
 2. 必要なパッケージ（freeglut3-dev や pkg-config など）がインストールされていることを確認し、以下のコマンドでビルドします。
 
-```sh
-mkdir build
-cd build
-cmake ..
-make
-```
+   ```sh
+   mkdir build
+   cd build
+   cmake ..
+   make
+   ```
 
 ## 3. 使い方
 
@@ -71,31 +64,35 @@ make
 
 - **Windows**
 
-Visual Studio 上で「ローカル Windows デバッガー」をクリックして実行するか、またはコマンドプロンプトから以下のコマンドで起動します。
+  Visual Studio 上で「ローカル Windows デバッガー」をクリックして実行するか、またはコマンドプロンプトから以下のコマンドで起動します。
 
-```cmd
-cd build\Debug
-texture11.exe
-```
+  ```cmd
+  cd build\Debug
+  texture11.exe
+  ```
 
 - **macOS**
 
-Xcode 上で左上の「Run（再生ボタン）」をクリックするのが楽です。これにより texture11.app アプリケーションバンドルとして自動的に実行されます。アプリケーションバンドルを直接起動するなら、Finder から build/Debug/texture11.app をダブルクリックするか、ターミナルから open build/Debug/texture11.app を実行します (この場合はエラーメッセージ等が表示されません)。
+  Xcode 上で左上の「Run（再生ボタン）」をクリックするのが楽です。これにより texture11.app アプリケーションバンドルとして自動的に実行されます。アプリケーションバンドルを直接起動するなら、Finder から build/Debug/texture11.app をダブルクリックするか、ターミナルから open build/Debug/texture11.app を実行します (この場合はエラーメッセージ等が表示されません)。
 
 - **Ubuntu Linux**
 
-ターミナルから以下のコマンドで実行ファイル（バイナリ）を直接起動します。
+  ターミナルから以下のコマンドで実行ファイル（バイナリ）を直接起動します。
 
-```sh
-cd build
-./texture11
-```
+  ```sh
+  cd build
+  ./texture11
+  ```
 
 ### 3.2 操作方法
 
-- **マウスの左ボタンでドラッグ**: 画面内のオブジェクト（箱）を３次元的に回転させることができます。多様な角度から、テクスチャがどのように貼り付けられているかを確認してください。
+- **マウスの左ボタンでドラッグ**
 
-- **キーボードの q, Q または ESC キー**: プログラムを終了します。
+  画面内のオブジェクト（箱）を３次元的に回転させることができます。多様な角度から、テクスチャがどのように貼り付けられているかを確認してください。
+
+- **キーボードの q, Q または ESC キー**
+
+プログラムを終了します。
 
 ## 4. 解説
 
@@ -105,16 +102,16 @@ cd build
 
 1. **テクスチャ領域の確保:**
 
-    `glPixelStorei(` `GL_UNPACK_ALIGNMENT`, 4 `)` を実行し、メモリ上のアライメントを指定した後、まずは `glTexImage2D()` を呼び出して、横1024ピクセル、縦128ピクセル分の「空の」2Dテクスチャ領域を OpenGL 側に確保します。（今回はあらかじめ1つの画像を読み込む処理は `#if 0` で無効化されています）
+   `glPixelStorei(` `GL_UNPACK_ALIGNMENT`, 4 `)` を実行し、メモリ上のアライメントを指定した後、まずは `glTexImage2D()` を呼び出して、横1024ピクセル、縦128ピクセル分の「空の」2Dテクスチャ領域を OpenGL 側に確保します。（今回はあらかじめ1つの画像を読み込む処理は `#if 0` で無効化されています）
 
 2. **画像の読み込みと部分的な置き換え:**
 
-    ループ処理を用いて、6つの異なる画像ファイル (`room2ny.raw`, `room2nz.raw` など) を順番に読み込みます。各画像は 128×128 ピクセルの RGBA 形式です。
-    読み込んだ各画像のデータは、[`glTexSubImage2D()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexSubImage2D.xhtml) 関数を用いて、先に確保した横長のテクスチャ領域の特定の位置に転送されます。X方向のオフセット（転送先の開始位置）を `i * 128` と指定することで、６枚の画像がテクスチャ内で横一列に並ぶように部分的な置き換えを行っています。
+   ループ処理を用いて、6つの異なる画像ファイル (`room2ny.raw`, `room2nz.raw` など) を順番に読み込みます。各画像は 128×128 ピクセルの RGBA 形式です。
+   読み込んだ各画像のデータは、[`glTexSubImage2D()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexSubImage2D.xhtml) 関数を用いて、先に確保した横長のテクスチャ領域の特定の位置に転送されます。X方向のオフセット（転送先の開始位置）を `i * 128` と指定することで、６枚の画像がテクスチャ内で横一列に並ぶように部分的な置き換えを行っています。
 
 3. **各種パラメータの設定:**
 
-    [`glTexParameteri()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml) 等を使用し、テクスチャを拡大縮小して貼り付ける際の補間方法（`GL_LINEAR` = バイリニア補間）を設定しています。また、テクスチャ座標が範囲外になった際の処理として `GL_CLAMP` が指定されています。
+   [`glTexParameteri()`](https://registry.khronos.org/OpenGL-Refpages/gl4/html/glTexParameter.xhtml) 等を使用し、テクスチャを拡大縮小して貼り付ける際の補間方法（`GL_LINEAR` = バイリニア補間）を設定しています。また、テクスチャ座標が範囲外になった際の処理として `GL_CLAMP` が指定されています。
 
 ### 4.2 テクスチャ座標の割り当て (box.cpp 内の `box()` 関数)
 
