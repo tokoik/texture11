@@ -8,7 +8,7 @@
 
 このプログラムは上記の記事に従って作業を進めたときに作成されるものの例です。
 
-![立方体の６面に異なるテクスチャをマッピング](https://tokoik.github.io/blog/assets/images/texture11.webp)
+![立方体の６面に異なるテクスチャをマッピング](https://tokoik.github.io/blog/assets/images/texture/texture11.webp)
 
 ## 2. ビルド方法
 
